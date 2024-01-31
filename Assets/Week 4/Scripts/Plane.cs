@@ -25,6 +25,10 @@ public class Plane : MonoBehaviour
 
     void Start()
     {
+        transform.position = new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
+        transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+        speed = Random.Range(1, 4);
+
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 1;
         lineRenderer.SetPosition(0, transform.position);
