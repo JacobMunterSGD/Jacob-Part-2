@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class Plane : MonoBehaviour
@@ -10,13 +11,25 @@ public class Plane : MonoBehaviour
     public float newPointThreshold;
     Vector2 lastPosition;
 
+    Vector2 currentPlanePosition;
+
     LineRenderer lineRenderer;
+
+    Rigidbody2D rb;
+
+    public float speed;
+
+    public AnimationCurve landing;
+
+    float landingTimer;
 
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 1;
         lineRenderer.SetPosition(0, transform.position);
+
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void OnMouseDown()
@@ -38,13 +51,65 @@ public class Plane : MonoBehaviour
         if (Vector2.Distance(currentPosition, lastPosition) > newPointThreshold)
         {
             points.Add(currentPosition);
-            lineRenderer.positionCount ++;
+            lineRenderer.positionCount++;
             lineRenderer.SetPosition(lineRenderer.positionCount - 1, currentPosition);
             lastPosition = currentPosition;
         }
 
+    }
+
+    void FixedUpdate()
+    {
+
+        currentPlanePosition = new Vector2(transform.position.x, transform.position.y);
         
+        if (points.Count > 0)
+        {
+
+            Vector2 direction = points[0] - currentPlanePosition;
+            float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+
+            rb.rotation = -angle;
+
+        }
+        rb.MovePosition(rb.position + (Vector2)transform.up * speed * Time.deltaTime);
 
     }
+
+    void Update()
+    {
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+
+            landingTimer += 0.1f * Time.deltaTime;
+            float interpolation = landing.Evaluate(landingTimer);
+
+            if (transform.localScale.z < 0.1f)
+            {
+                Destroy(gameObject);
+            }
+
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, interpolation);
+
+        }
+
+        if (points.Count > 0)
+        {
+            if (Vector2.Distance(currentPlanePosition, points[0]) < newPointThreshold)
+            {
+                points.RemoveAt(0);
+
+                for (int i = 0; i < lineRenderer.positionCount - 2; i++)
+                {
+                    lineRenderer.SetPosition(i, lineRenderer.GetPosition(i + 1));
+                }
+                lineRenderer.positionCount --;
+
+            }
+        }
+
+    }
+
 
 }
