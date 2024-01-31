@@ -10,7 +10,6 @@ public class Plane : MonoBehaviour
     public List<Vector2> points;
     public float newPointThreshold;
     Vector2 lastPosition;
-
     Vector2 currentPlanePosition;
 
     LineRenderer lineRenderer;
@@ -23,6 +22,10 @@ public class Plane : MonoBehaviour
 
     float landingTimer;
 
+    SpriteRenderer SpriteRenderer;
+
+    float proximity = 1;
+
     void Start()
     {
         transform.position = new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
@@ -34,6 +37,8 @@ public class Plane : MonoBehaviour
         lineRenderer.SetPosition(0, transform.position);
 
         rb = GetComponent<Rigidbody2D>();
+
+        SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void OnMouseDown()
@@ -113,6 +118,32 @@ public class Plane : MonoBehaviour
             }
         }
 
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+
+        SpriteRenderer.color = new Color(255, 0, 0);
+        UnityEngine.Debug.Log("collision");
+
+        if (Vector3.Distance(currentPlanePosition, col.transform.position) < proximity)
+        {
+            Destroy(gameObject);
+        }
+
+
+    }
+
+    void OnTriggerExit2D()
+    {
+
+        SpriteRenderer.color = new Color(219, 219, 219);
+
+    }
+
+    void OnBecameInvisible()
+    {
+        Destroy(gameObject);
     }
 
 
