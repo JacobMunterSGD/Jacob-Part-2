@@ -26,6 +26,10 @@ public class Plane : MonoBehaviour
 
     float proximity = 1;
 
+    bool isLanding = false;
+
+    public int score = 0;
+
     void Start()
     {
         transform.position = new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
@@ -88,7 +92,7 @@ public class Plane : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKey(KeyCode.Space))
+        if (isLanding)
         {
 
             landingTimer += 0.1f * Time.deltaTime;
@@ -123,14 +127,25 @@ public class Plane : MonoBehaviour
     void OnTriggerStay2D(Collider2D col)
     {
 
+
+
         SpriteRenderer.color = new Color(255, 0, 0);
         UnityEngine.Debug.Log("collision");
 
-        if (Vector3.Distance(currentPlanePosition, col.transform.position) < proximity)
+        if (col.gameObject.tag != "runway" && Vector3.Distance(currentPlanePosition, col.transform.position) < proximity)
         {
             Destroy(gameObject);
         }
 
+        if (col.gameObject.tag == "runway")
+        {
+            //&& col.overlapPoint == true
+            score++;
+            UnityEngine.Debug.Log(score);
+            UnityEngine.Debug.Log("runway");
+            isLanding = true;
+        
+        }
 
     }
 
