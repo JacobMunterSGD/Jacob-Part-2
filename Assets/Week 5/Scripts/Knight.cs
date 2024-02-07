@@ -56,6 +56,13 @@ public class Knight : MonoBehaviour
 
         }
 
+        if (Input.GetMouseButtonDown(1))
+        {
+
+            animator.SetTrigger("Attack");
+
+        }
+
         animator.SetFloat("Movement", movement.magnitude);
 
     }
