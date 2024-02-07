@@ -21,7 +21,6 @@ public class Knight : MonoBehaviour
     bool isDead;
 
     public HealthBar healthBar;
-    public Weapon weapon;
 
     private void Start()
     {
@@ -73,19 +72,12 @@ public class Knight : MonoBehaviour
         if (isDead) return;
         clickingOnSelf = true;
         gameObject.SendMessage("TakeDamage", 1);
-        
-        //healthBar.TakeDamage(1);
 
     }
 
     private void OnMouseUp()
     {
         clickingOnSelf = false;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        weapon.TakeDamage();
     }
 
     public void TakeDamage(float damage)
