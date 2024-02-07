@@ -15,6 +15,9 @@ public class Weapon : MonoBehaviour
     {
         
         rb = GetComponent<Rigidbody2D>();
+
+        knight = GameObject.Find("Knight");
+
         timer = 10;
 
     }
@@ -40,11 +43,6 @@ public class Weapon : MonoBehaviour
     {
 
         knight.SendMessage("TakeDamage", 5);
-        
-
-
-        Debug.Log("asdaijdaoi");
-
         Destroy(gameObject);
 
     }
