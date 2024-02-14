@@ -30,32 +30,11 @@ public class Knight : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        //PlayerPrefs.SetFloat("health", 5);
-
-        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("health"));
-
-        if (PlayerPrefs.GetFloat("health") < 0 || PlayerPrefs.GetFloat("health") > maxHealth)
-        {
-            UnityEngine.Debug.Log("asduh1");
-
-            health = maxHealth;
-            UnityEngine.Debug.Log("asd2");
-            PlayerPrefs.SetFloat("health", health);
-        }
-
-        health = PlayerPrefs.GetFloat("health");
-        PlayerPrefs.SetFloat("health", health);
-
-        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("health"));
-
+        gameObject.SendMessage("ResetHealth");
 
         isDead = false;
 
-        if (PlayerPrefs.GetFloat("health") <= 0)
-        {
-            animator.SetTrigger("Death");
-            isDead = true;
-        }
+        
 
     }
 
@@ -127,4 +106,22 @@ public class Knight : MonoBehaviour
         }
 
     }
+
+    public void ResetHealth()
+    {
+        if (PlayerPrefs.GetFloat("health") < 0 || PlayerPrefs.GetFloat("health") > maxHealth)
+        {
+            health = maxHealth;
+            PlayerPrefs.SetFloat("health", health);
+        }
+
+        health = PlayerPrefs.GetFloat("health");
+        PlayerPrefs.SetFloat("health", health);
+
+        if (PlayerPrefs.GetFloat("health") <= 0)
+        {
+            animator.SetTrigger("Death");
+            isDead = true;
+        }
+    }   
 }

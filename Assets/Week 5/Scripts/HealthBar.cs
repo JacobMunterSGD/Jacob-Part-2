@@ -5,17 +5,19 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-
+    
     public Slider slider;
 
-    public void Start()
+    public void ResetHealth()
     {
         slider.value = PlayerPrefs.GetFloat("health");
     }
 
     public void TakeDamage(float damage)
     {
-        //slider.value -= damage;
+        /*float tempHealth = PlayerPrefs.GetFloat("health");
+        tempHealth -= damage;
+        PlayerPrefs.SetFloat("health", tempHealth);*/
         slider.value = PlayerPrefs.GetFloat("health");
     }
 }
