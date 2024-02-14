@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,6 +18,7 @@ public class Knight : MonoBehaviour
     bool clickingOnSelf = false;
 
     public float health;
+    
     public float maxHealth;
 
     bool isDead;
@@ -28,9 +30,33 @@ public class Knight : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        health = maxHealth;
+        //PlayerPrefs.SetFloat("health", 5);
+
+        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("health"));
+
+        if (PlayerPrefs.GetFloat("health") < 0 || PlayerPrefs.GetFloat("health") > maxHealth)
+        {
+            UnityEngine.Debug.Log("asduh1");
+
+            health = maxHealth;
+            UnityEngine.Debug.Log("asd2");
+            PlayerPrefs.SetFloat("health", health);
+        }
+
+        health = PlayerPrefs.GetFloat("health");
+        PlayerPrefs.SetFloat("health", health);
+
+        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("health"));
+
 
         isDead = false;
+
+        if (PlayerPrefs.GetFloat("health") <= 0)
+        {
+            animator.SetTrigger("Death");
+            isDead = true;
+        }
+
     }
 
     private void FixedUpdate()
@@ -85,9 +111,11 @@ public class Knight : MonoBehaviour
     {
 
         health -= damage;
+        PlayerPrefs.SetFloat("health", health);
+        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("health"));
 
         health = Mathf.Clamp(health, 0, maxHealth);
-        if (health <= 0)
+        if (PlayerPrefs.GetFloat("health") <= 0)
         {
             animator.SetTrigger("Death");
             isDead = true;
