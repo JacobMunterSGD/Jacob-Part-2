@@ -11,13 +11,15 @@ public class Fish : MonoBehaviour
 
     Rigidbody2D rb;
     Vector2 destination;
-    Vector2 direction;
+    Vector2 movement;
 
     public float moveSpeed;
     public float minSpeed;
     public float boostLose;
     public float boost;
     public float maxSpeed;
+
+    float angle;
 
     bool isClickingOnSelf = false;
 
@@ -34,19 +36,24 @@ public class Fish : MonoBehaviour
 
     private void FixedUpdate()
     {
-        direction = destination - (Vector2)transform.position;
+        movement = destination - (Vector2)transform.position;
 
-        if (direction.magnitude < 0.1)
+        if (movement.magnitude < 0.1)
         {
-            direction = Vector2.zero;
+            movement = Vector2.zero;
             moveSpeed = minSpeed;
+            animator.SetBool("Moving", false);
+            
         }
+        
 
-        rb.MovePosition(rb.position + direction.normalized * Time.deltaTime * moveSpeed);
+        rb.MovePosition(rb.position + movement.normalized * Time.deltaTime * moveSpeed);
     }
 
     void Update()
     {
+
+        
 
         if (moveSpeed > minSpeed)
         {
@@ -55,14 +62,50 @@ public class Fish : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && moveSpeed < maxSpeed)
         {
-            moveSpeed += boost;
+            Boost();
         }
 
-        if (Input.GetMouseButtonDown(0) == true && isClickingOnSelf == false)
+        if (Input.GetMouseButtonDown(0) == true && isClickingOnSelf == false && !EventSystem.current.IsPointerOverGameObject())
         {
         
             destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
 
+            CharacterDirection();
+
+        }
+
+    }
+
+    private void CharacterDirection()
+    {
+
+        animator.SetBool("Moving", true);
+        angle = Mathf.Rad2Deg * (Mathf.Atan2(destination.y - transform.position.y, destination.x - transform.position.x));
+        Debug.Log(angle);
+
+        if (angle > -135 && angle < -45) // UP
+        {
+            animator.SetFloat("Vertical", -1);
+            animator.SetFloat("Horizontal", 0);
+        }
+
+        if (angle > 45 && angle < 135) // DOWN
+        {
+            animator.SetFloat("Vertical", 1);
+            animator.SetFloat("Horizontal", 0);
+        }
+
+        if (angle > -45 && angle < 45) // RIGHT
+        {//asdasd
+            animator.SetFloat("Vertical", 0);
+            animator.SetFloat("Horizontal", 1);
+        }
+
+        if (angle > 135 || angle < -135) // LEFT
+        {
+            animator.SetFloat("Vertical", 0);
+            animator.SetFloat("Horizontal", -1);
         }
 
     }
@@ -76,6 +119,11 @@ public class Fish : MonoBehaviour
     private void OnMouseUp()
     {
         isClickingOnSelf = false;
+    }
+
+    public void Boost()
+    {
+        moveSpeed += boost;
     }
 
 }
