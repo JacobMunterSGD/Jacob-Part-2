@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour
 {
+
+    Animator animator;
+
     Rigidbody2D rb;
     Vector2 destination;
     Vector2 direction;
@@ -22,6 +25,7 @@ public class Fish : MonoBehaviour
     {
 
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
         moveSpeed = minSpeed;
 
