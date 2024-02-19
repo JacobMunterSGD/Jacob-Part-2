@@ -82,7 +82,6 @@ public class Fish : MonoBehaviour
 
         animator.SetBool("Moving", true);
         angle = Mathf.Rad2Deg * (Mathf.Atan2(destination.y - transform.position.y, destination.x - transform.position.x));
-        Debug.Log(angle);
 
         if (angle > -135 && angle < -45) // UP
         {
