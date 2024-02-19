@@ -8,8 +8,9 @@ public class Fish : MonoBehaviour
 {
 
     Animator animator;
-
     Rigidbody2D rb;
+    public GameObject gm;
+
     Vector2 destination;
     Vector2 movement;
 
@@ -18,6 +19,8 @@ public class Fish : MonoBehaviour
     public float boostLose;
     public float boost;
     public float maxSpeed;
+
+    float boostSubtractScoreBy;
 
     float angle;
 
@@ -28,8 +31,11 @@ public class Fish : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        gm = GameObject.Find("Game Manager");
 
         moveSpeed = minSpeed;
+
+        boostSubtractScoreBy = -1;
 
     }
 
@@ -60,8 +66,9 @@ public class Fish : MonoBehaviour
             moveSpeed -= Time.deltaTime * boostLose;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && moveSpeed < maxSpeed)
+        if (Input.GetKeyDown(KeyCode.Space) && moveSpeed < maxSpeed && movement.magnitude < 0.1)
         {
+            Debug.Log(movement.magnitude);
             Boost();
         }
 
@@ -122,7 +129,12 @@ public class Fish : MonoBehaviour
 
     public void Boost()
     {
-        moveSpeed += boost;
+        if (moveSpeed < maxSpeed && movement.magnitude > 0)
+        {
+            moveSpeed += boost;
+            gm.SendMessage("ChangeScore", boostSubtractScoreBy);
+        }
+        
     }
 
 }
