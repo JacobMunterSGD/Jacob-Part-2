@@ -24,11 +24,14 @@ public class HookOrFood : MonoBehaviour
     bool GettingEaten;
     float eatenTimer;
 
+    SpriteRenderer sr;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
         gm = GameObject.Find("Game Manager");
+        sr = GetComponent<SpriteRenderer>();
 
         verticalSpawnBuffer = 4;
 
@@ -82,14 +85,26 @@ public class HookOrFood : MonoBehaviour
             float interpolation = eaten.Evaluate(eatenTimer);
 
             if (transform.localScale.z < 0.1)
-            {
-                Destroy(gameObject);
+            { 
+                if (gameObject.tag == "Food")
+                {
+                    Destroy(gameObject);
+                }
+
+                if (gameObject.tag == "Hook")
+                {
+                    gm.SendMessage("GameOver");
+                    Destroy(gameObject);
+
+                }
+
             }
 
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, interpolation);
-        }
 
-        
+            sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, sr.color.a - interpolation); 
+
+        }        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -103,7 +118,11 @@ public class HookOrFood : MonoBehaviour
 
         if (gameObject.tag == "Hook")
         {
-            gm.SendMessage("GameOver");
+            //gm.SendMessage("GameOver");
+            GettingEaten = true;
+
         }
     }
+
+    
 }
