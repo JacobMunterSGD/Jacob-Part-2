@@ -7,8 +7,8 @@ using UnityEngine;
 public class HookAndFoodSpawner : MonoBehaviour
 {
 
-    public GameObject hook;     // https://www.vecteezy.com/png/36492667-cartoon-doodle-fish-hook
-    public GameObject food;     // https://www.shutterstock.com/sv/image-vector/cute-garden-earthworm-ground-worm-creeps-2181488945
+    public GameObject hook;
+    public GameObject food;
 
     float foodTimer;
     float hookTimer;
@@ -45,5 +45,6 @@ public class HookAndFoodSpawner : MonoBehaviour
         {
             hookTimer -= Time.deltaTime;
         }
+
     }
 }

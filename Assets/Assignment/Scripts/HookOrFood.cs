@@ -11,6 +11,7 @@ public class HookOrFood : MonoBehaviour
     Rigidbody2D rb;
     public GameObject player;
     public GameObject gm;
+    public AnimationCurve eaten;
 
     float leftOrRight;
     float verticalSpawnBuffer;
@@ -19,6 +20,9 @@ public class HookOrFood : MonoBehaviour
     float foodChangeScoreBy;
 
     float hookSpeed;
+
+    bool GettingEaten;
+    float eatenTimer;
 
     void Start()
     {
@@ -35,6 +39,8 @@ public class HookOrFood : MonoBehaviour
         foodChangeScoreBy = 5;
 
         int tempLeftRight = Random.Range(0, 2);
+
+        GettingEaten = false;
 
         //Debug.Log(tempLeftRight);
 
@@ -66,12 +72,33 @@ public class HookOrFood : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        if (GettingEaten)
+        {
+
+            eatenTimer += 0.3f * Time.deltaTime;
+
+            float interpolation = eaten.Evaluate(eatenTimer);
+
+            if (transform.localScale.z < 0.1)
+            {
+                Destroy(gameObject);
+            }
+
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, interpolation);
+        }
+
+        
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (gameObject.tag == "Food")
         {
             gm.SendMessage("ChangeScore", foodChangeScoreBy);
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            GettingEaten = true;
         }
 
         if (gameObject.tag == "Hook")
