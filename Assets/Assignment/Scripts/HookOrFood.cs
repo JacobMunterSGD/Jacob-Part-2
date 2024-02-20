@@ -24,6 +24,8 @@ public class HookOrFood : MonoBehaviour
     bool GettingEaten;
     float eatenTimer;
 
+    float timerToDestroy;
+
     SpriteRenderer sr;
 
     void Start()
@@ -34,6 +36,8 @@ public class HookOrFood : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
 
         verticalSpawnBuffer = 4;
+
+        timerToDestroy = 30;
 
         foodSpeed = Random.Range(2, 4);
 
@@ -104,7 +108,14 @@ public class HookOrFood : MonoBehaviour
 
             sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, sr.color.a - interpolation); 
 
-        }        
+        }
+
+        timerToDestroy -= Time.deltaTime;
+
+        if (timerToDestroy < 0)
+        {
+            GettingEaten = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
