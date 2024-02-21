@@ -15,6 +15,8 @@ public class GoalkeeperController : MonoBehaviour
 
     Player tempPlayer;
 
+    float speed = 2;
+
     void Start()
     {
         minDistance = 2;
@@ -31,11 +33,14 @@ public class GoalkeeperController : MonoBehaviour
 
         if (direction.magnitude < minDistance)
         {
-            rb.position = (Vector2)transform.position - direction / 2;
+            //Vector2 a = ((Vector2)transform.position - (Vector2)direction / 2);
+            rb.position = Vector2.MoveTowards(tempPlayer.transform.position, direction - direction/2, speed * Time.deltaTime);
         }
         else 
         {
-            rb.position = (Vector2)transform.position - direction.normalized * minDistance;
+            //rb.position = (Vector2)transform.position - direction.normalized * minDistance;
+            //Vector2 a = ((Vector2)transform.position - (Vector2)direction / 2);
+            rb.position = Vector2.MoveTowards(rb.position, (Vector2)transform.position - (Vector2)direction.normalized * minDistance, speed * Time.deltaTime);
         }
 
     }
