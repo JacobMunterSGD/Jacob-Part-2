@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TeamController : MonoBehaviour
 {
@@ -12,8 +13,13 @@ public class TeamController : MonoBehaviour
     public float maxCharge;
     Vector2 direction;
 
+    public TMP_Text scoreText;
+
+    public static float score = 0;
+
     public static Player SelectedPlayer { get; private set; }
 
+    
 
     public static void SetSelectedPlayer(Player player)
     {
@@ -43,6 +49,8 @@ public class TeamController : MonoBehaviour
 
     private void Update()
     {
+        scoreText.text = "score: " + score;
+
         if (SelectedPlayer == null) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -62,6 +70,7 @@ public class TeamController : MonoBehaviour
         {
             direction = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - SelectedPlayer.transform.position).normalized * chargeValue;
         }
+
     }
 
 
