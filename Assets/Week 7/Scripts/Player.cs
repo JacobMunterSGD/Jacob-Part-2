@@ -8,55 +8,47 @@ public class Player : MonoBehaviour
 {
 
     SpriteRenderer sr;
-
-    public bool isSelected;
+    Rigidbody2D rb;
 
     public Color selectedColour;
     public Color unSelectedColour;
+
+    float speed = 100;
 
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
 
-        //selectedColour = new Color(255, 0, 0, 255);
-        //unSelectedColour = new Color(130, 0, 0, 255);
-
-        isSelected = false;
         Selected(false);
 
     }
 
-    void Update()
+    public void Selected(bool isSelected)
     {
         
-    }
-
-    public void Selected(bool tempIsSelected)
-    {
-
-        //Debug.Log(isSelected);
-
-        
-        if (tempIsSelected)
+        if (isSelected)
         {
             sr.color = selectedColour;
-            //Debug.Log("on");
-            //isSelected = true;
         }
         else
         {
             sr.color = unSelectedColour;
-            //Debug.Log("off");
-            //isSelected = false;
         }
 
+    }
 
-
+    public void Move(Vector2 direction)
+    {
+        rb.AddForce(direction * speed, ForceMode2D.Impulse);
     }
 
     private void OnMouseDown()
     {
-        Selected(true);
+        TeamController.SetSelectedPlayer(this);
     }
+
+    
+
 }
